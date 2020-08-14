@@ -1,7 +1,8 @@
 const router = require('express').Router();
+const path = require('path');
 const fs = require('fs');
 
-const { notes } = require('../db/db');
+const { notes } = require('../db/db.json');
 
 
 function findById(id, notesArray) {
@@ -13,11 +14,11 @@ function createNewNote(body, notesArray) {
   const note = body;
   notesArray.push(note);
   fs.writeFileSync(
-    path.join(__dirname, './db/db.json'),
+    path.join(__dirname, '../db/db.json'),
     JSON.stringify({ notes: notesArray }, null, 2)
   );
 
-  return note;
+  return body;
 }
 
 function validateNote(note) {
@@ -30,12 +31,29 @@ function validateNote(note) {
   return true;
 }
 
+function deleteNote(id, notesArray) {
+  let noteID = parseInt(id);
+  for (let i = 0; i < notes.length; i++) {
+      if (noteID === notes[i].id) {
+        notes.splice(i,1);
+        notes[0].id = 0;
+        for (let j = 1; j < notes.length; j++) {
+          notes[j].id = notes[j-1].id + 1;
+        }
+        fs.writeFileSync(
+          path.join(__dirname, '../db/db.json'),
+          JSON.stringify({ notes: notesArray }, null, 2)
+        );
+      }
+  }
+  return notes;
+};
 
-router.get('/api/notes', (req, res) => {
+router.get('/notes', (req, res) => {
     res.json(notes);
   });
 
-router.get('/api/notes/:id', (req, res) => {
+router.get('/notes/:id', (req, res) => {
     const result = findById(req.params.id, notes);
     if (result) {
         res.json(result);
@@ -44,11 +62,14 @@ router.get('/api/notes/:id', (req, res) => {
     }
 });
 
-router.post('/api/notes', (req, res) => {
-  // set id based on what the next index of the array will be
-  req.body.id = notes.length.toString();
+// Write
+router.post('/notes', (req, res) => {
+  if (notes === undefined || notes.length == 0) {
+    req.body.id = 0;
+  } else {
+    req.body.id = notes.length;
+  };
 
-  // add animal to json file and animals array in this function
   if (!validateNote(req.body)) {
     res.status(400).send('The note is not properly formatted.');
   } else {
@@ -56,5 +77,12 @@ router.post('/api/notes', (req, res) => {
     res.json(note);
   }
 });
+
+// Delete
+router.delete('/notes/:id', (req, res) => {
+  deleteNote(req.params.id, notes);
+  res.json(notes);
+});
+
 
 module.exports  = router;

@@ -1,14 +1,24 @@
 {
   "notes": [
     {
-      "title": "Test Title",
-      "text": "Test text",
-      "id": "0"
+      "title": "Good Morning",
+      "text": "Have a great day!",
+      "id": 0
+    },
+    {
+      "title": "Lunch",
+      "text": "Eat lunch",
+      "id": 1
     },
     {
       "title": "Wash Car",
-      "text": "Wash all the cars",
-      "id": "1"
+      "text": "Wash your car",
+      "id": 2
+    },
+    {
+      "title": "Beach",
+      "text": "Go to the beach",
+      "id": 3
     }
   ]
 }
