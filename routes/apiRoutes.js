@@ -6,7 +6,8 @@ const { notes } = require('../db/db.json');
 
 
 function findById(id, notesArray) {
-  const result = notesArray.filter(note => note.id === id)[0];
+  let noteID = parseInt(id);
+  const result = notesArray.filter(note => note.id === noteID)[0];
   return result;
 }
 
@@ -56,7 +57,7 @@ function deleteNote(id, notesArray) {
 router.get('/notes', (req, res) => {
     res.json(notes);
   });
-
+// Find by id must use path /api/notes in 
 router.get('/notes/:id', (req, res) => {
     const result = findById(req.params.id, notes);
     if (result) {

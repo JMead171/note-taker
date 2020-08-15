@@ -4,6 +4,11 @@
       "title": "Good Morning",
       "text": "Have a great day!",
       "id": 0
+    },
+    {
+      "title": "Exercise",
+      "text": "Go for a run",
+      "id": 1
     }
   ]
 }
