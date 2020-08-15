@@ -10,6 +10,7 @@ function findById(id, notesArray) {
   return result;
 }
 
+// Write new note
 function createNewNote(body, notesArray) {
   const note = body;
   notesArray.push(note);
@@ -31,14 +32,17 @@ function validateNote(note) {
   return true;
 }
 
+// Delete note, logic to re-assign ids on delete
 function deleteNote(id, notesArray) {
   let noteID = parseInt(id);
   for (let i = 0; i < notes.length; i++) {
       if (noteID === notes[i].id) {
         notes.splice(i,1);
-        notes[0].id = 0;
-        for (let j = 1; j < notes.length; j++) {
-          notes[j].id = notes[j-1].id + 1;
+        if (notes.length > 0) {
+          notes[0].id = 0;
+          for (let j = 1; j < notes.length; j++) {
+            notes[j].id = notes[j-1].id + 1;
+          }  
         }
         fs.writeFileSync(
           path.join(__dirname, '../db/db.json'),
@@ -62,7 +66,7 @@ router.get('/notes/:id', (req, res) => {
     }
 });
 
-// Write
+// Write API route
 router.post('/notes', (req, res) => {
   if (notes === undefined || notes.length == 0) {
     req.body.id = 0;
@@ -78,7 +82,7 @@ router.post('/notes', (req, res) => {
   }
 });
 
-// Delete
+// Delete API route
 router.delete('/notes/:id', (req, res) => {
   deleteNote(req.params.id, notes);
   res.json(notes);
